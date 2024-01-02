@@ -22,7 +22,7 @@ model User {
 }
 
 model Profile {
-  id            Int            @id @default(autoincrement())
+  id            String         @id @default(uuid())
   userId        Int
   role          Role
   isActive      Boolean        @default(false)
@@ -35,9 +35,9 @@ model Profile {
 }
 
 model RefreshToken {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   token     String   @unique
-  profileId Int
+  profileId String
   userAgent String?
   valid     Boolean  @default(true)
   createdAt DateTime @default(now())
