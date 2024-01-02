@@ -144,3 +144,27 @@ export async function refresh(req: Request, res: Response) {
         routeErrorHandler("refresh", error, res);
     }
 }
+
+export async function logout(req: Request, res: Response) {
+    const { refreshToken } = req.body;
+
+    try {
+        // Check if the refresh token is in the database
+        const token = await prisma.refreshToken.findUnique({
+            where: { token: refreshToken },
+        });
+
+        if (token) {
+            // Invalidate the refresh token
+            await prisma.refreshToken.update({
+                where: { token: refreshToken },
+                data: { valid: false },
+            });
+        }
+
+        // Respond to the client that the user has been logged out
+        res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        routeErrorHandler("logout", error, res);
+    }
+}
